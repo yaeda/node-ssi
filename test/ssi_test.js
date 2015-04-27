@@ -131,15 +131,27 @@ exports.ssi = {
         });
     },
     virtual_include: function(test) {
-        var ssi = new SSI({
-            baseDir: path.join(__dirname, './mock')
-        });
+      var ssi = new SSI({
+          baseDir: path.join(__dirname, './mock')
+      });
 
-        ssi.compileFile(path.join(__dirname, './mock/subdir/virtual-include.html'), function(err, output) {
-            test.ok(!err);
-            test.ok(output, 'output sent');
-            test.ok(!!~output.indexOf('<nav>')); //from header.html
-            test.done();
+      ssi.compileFile(path.join(__dirname, './mock/subdir/virtual-include.html'), function(err, output) {
+          test.ok(!err);
+          test.ok(output, 'output sent');
+          test.ok(!!~output.indexOf('<nav>')); //from header.html
+          test.done();
+        });
+    },
+    virtual_include_absolute_path: function(test) {
+      var ssi = new SSI({
+          baseDir: path.join(__dirname, './mock')
+      });
+
+      ssi.compileFile(path.join(__dirname, './mock/subdir/virtual-include-absolute-path.html'), function(err, output) {
+          test.ok(!err);
+          test.ok(output, 'output sent');
+          test.ok(!!~output.indexOf('<nav>')); //from header.html
+          test.done();
         });
     }
 };
