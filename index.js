@@ -197,15 +197,17 @@ SSI.prototype = {
      * @param callback
      */
     resolveIncludes: function(content, options, callback) {
-        var matches, seg, isVirtual, basePath, tpath, subOptions, ssi = this;
+        var matches, seg, isVirtual, filePath, isAbsolutePath, basePath, tpath, subOptions, ssi = this;
 
         async.whilst( // https://www.npmjs.org/package/async#whilst-test-fn-callback-
             function test() {return !!(matches = includeFileReg.exec(content)); },
             function insertInclude(next) {
                 seg = matches[0];
                 isVirtual = RegExp.$1 == 'virtual';
-                basePath = (isVirtual && options.dirname)? options.dirname : options.baseDir;
-                tpath = path.join(basePath, RegExp.$3);
+                filePath = RegExp.$3;
+                isAbsolutePath = /^\//.test(filePath);
+                basePath = (isVirtual && !isAbsolutePath && options.dirname)? options.dirname : options.baseDir;
+                tpath = path.join(basePath, filePath);
                 fs.readFile(tpath, {
                         encoding: options.encoding
                     }, function(err, innerContentRaw) {
